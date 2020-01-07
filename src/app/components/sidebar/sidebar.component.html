@@ -1,0 +1,98 @@
+<nav id="sidebar" class="navbar-dark bg-dark" [ngClass]="{'mr-0':toggleSideBar}">
+  <ul class="navbar-nav">
+
+    <li id="sidebarOpen" *ngFor="let item of sidebarMenuData;let i = index" class="nav-item dropdown"
+      [ngClass]="{'dropdown':item.subMenus && item.subMenus.length>0}">
+      <a routerLink="/{{item.url}}" class="nav-link d-flex"
+        [ngClass]="{'active':currentTab == item.url || (item.url =='dashboard' && currentTab =='') }"
+        *ngIf="!item.subMenus" (click)="currentActiveTab(item.url,'')">
+        <div class="w-40"><i class="fa {{item.icon}} fa-2x"></i></div>
+        <span [innerHTML]="item.name"></span>
+      </a>
+
+      <a *ngIf="item.subMenus && item.subMenus.length > 0"
+        [ngClass]="{'active':currentTab == item.url || currentParentTab == item.url}"
+        class="nav-link dropdown-toggle d-flex align-items-center" data-toggle="collapse"
+        [attr.data-target]="'#dropdownTarget_'+i" (click)="currentActiveTab(item.url,'')">
+
+        <div class="w-40"><i class="fa {{item.icon}} fa-2x"></i></div>
+        <span [innerHTML]="item.name"></span>
+      </a>
+
+      <ul *ngIf="item.subMenus && item.subMenus.length > 0" class="dropdown-list list-unstyled navbar-collapse collapse"
+        [id]="'dropdownTarget_'+i" [ngClass]="{'show':currentParentTab==item.url}">
+        <li *ngFor="let subItem of item.subMenus;let j = index" class="nav-item">
+          <a class="nav-link d-flex" [ngClass]="{'active':currentParentTab == item.url && currentTab == subItem.url}"
+            routerLink="/{{item.url}}/{{subItem.url}}" (click)="currentActiveTab(subItem.url,item.url)">
+            <div class="w-40"></div>
+            <span [innerHTML]="subItem.name"></span>
+          </a></li>
+      </ul>
+
+    </li>
+    <li id="sidebarOpen" class="nav-item dropdown quicklinks">
+      <a class="nav-link dropdown-toggle d-flex align-items-center" data-toggle="collapse"
+        [attr.data-target]="'#quickLinks'"
+        [ngClass]="{'active':currentTab == 'quickLinks' || currentParentTab == 'quickLinks'}" (click)="currentActiveTab('quickLinks','')">
+
+        <div class="w-40"><i class="fa fa-external-link fa-2x"></i></div>
+        <span>Quick Links</span>
+      </a>
+      <ul id="quickLinks" *ngIf="quickLinks && quickLinks.length > 0"
+        class="navbar-nav dropdown-list list-unstyled navbar-collapse collapse">
+        <li *ngFor="let item of quickLinks;let i = index; let last = last;let first = first" class="nav-item dropdown">
+          <a class="nav-link d-flex" [ngClass]="{'active':currentParentTab == 'quickLinks' && currentTab == item.url}"
+            [href]="item.url" (click)="currentActiveTab(item.url,'quickLinks')">
+            <div class="w-40"></div>
+            <span [innerHTML]="item.name"></span>
+          </a>
+          <div class="show-add-ql-plus-icon" *ngIf=!last>
+            <span (click)="toggleAddQuickLink(true, i+1)"><i class="fa fa-plus"></i></span>
+          </div>
+          <div class="more-icon">
+            <span (click)="showMoreMneu = true" class="more-menu-toggle" [attr.data-target]="'#moreMenu_'+i"><i class="fa fa-ellipsis-v"></i></span>
+          <div class="more-menu-dropdown" [id]="'moreMenu_'+i">
+            <div class="d-block" *ngIf="!first" (click)="reOrderQuickLinks($event, i, 'up')">Move Up</div>
+            <div class="d-block" *ngIf="!last"  (click)="reOrderQuickLinks($event, i, 'down')">Move Down</div>
+            <div class="d-block" (click)="removeQuickLink($event, i)">Remove</div>
+          </div>
+          </div>
+        </li>
+      </ul>
+      <button class="btn btn-light" (click)="toggleAddQuickLink(true, '')"><i class="fa fa-plus"></i></button>
+      <div class="dropdown-custom text-dark border" [ngClass]="{'show': showAddQuickLinkFlag}">
+        <h3 class="mb-3">Add Link</h3>
+        <form [formGroup]="addQuickLinksForm" (ngSubmit)="createQuickLink(null)">
+          <div class="form-group input-group">
+            <input type="text" class="form-control" placeholder="Current Index" formControlName="currentIndex">
+          </div>
+
+          <div class="form-group input-group">
+            <input type="text" class="form-control" placeholder="Display Name" formControlName="name" required>
+
+            <div class="invalid-feedback d-block"
+              *ngIf="addQuickLinksForm.get('name').touched && addQuickLinksForm.get('name').invalid">
+              Display Name is required
+            </div>
+          </div>
+          <div class="form-group input-group">
+            <textarea class="form-control" placeholder="URL" formControlName="url" pattern="^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$" required></textarea>
+            <div class="invalid-feedback d-block"
+              *ngIf="addQuickLinksForm.get('url').touched && addQuickLinksForm.get('url').invalid">
+              <div *ngIf="addQuickLinksForm.get('url').errors.required">URL is required</div>
+              <div *ngIf="addQuickLinksForm.get('url').errors.pattern">URL is invalid</div>
+              
+            </div>
+          </div>
+          <div class="form-group input-group">
+            <input type="reset" (click)="toggleAddQuickLink(false, '')" class="btn btn-light mr-2" value="Cancel">
+            <input type="submit" class="btn btn-primary">
+          </div>
+        </form>
+      </div>
+    </li>
+
+  </ul>
+
+
+</nav>
