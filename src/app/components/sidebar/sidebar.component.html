@@ -1,19 +1,18 @@
-<nav id="sidebar" class="navbar-dark bg-dark" [ngClass]="{'mr-0':toggleSideBar}">
+<nav #sidebar class="navbar-dark sidebar bg-dark" [ngClass]="{'mr-0':toggleSideBar}" (click)="sidebarClicked($event)">
   <ul class="navbar-nav">
 
-    <li id="sidebarOpen" *ngFor="let item of sidebarMenuData;let i = index" class="nav-item dropdown"
-      [ngClass]="{'dropdown':item.subMenus && item.subMenus.length>0}">
+    <li *ngFor="let item of sidebarMenuData;let i = index" class="nav-item dropdown"
+      [ngClass]="{'dropdown':item.subMenus && item.subMenus.length>0}" (click)="toggleSideBar = true">
       <a routerLink="/{{item.url}}" class="nav-link d-flex"
         [ngClass]="{'active':currentTab == item.url || (item.url =='dashboard' && currentTab =='') }"
-        *ngIf="!item.subMenus" (click)="currentActiveTab(item.url,'')">
+        *ngIf="!item.subMenus" (click)="currentActiveTab(item.url,'', '')">
         <div class="w-40"><i class="fa {{item.icon}} fa-2x"></i></div>
         <span [innerHTML]="item.name"></span>
       </a>
 
       <a *ngIf="item.subMenus && item.subMenus.length > 0"
         [ngClass]="{'active':currentTab == item.url || currentParentTab == item.url}"
-        class="nav-link dropdown-toggle d-flex align-items-center" data-toggle="collapse"
-        [attr.data-target]="'#dropdownTarget_'+i" (click)="currentActiveTab(item.url,'')">
+        class="nav-link dropdown-toggle d-flex align-items-center" (click)="currentActiveTab(item.url,'', 'dropdownTarget_'+i)">
 
         <div class="w-40"><i class="fa {{item.icon}} fa-2x"></i></div>
         <span [innerHTML]="item.name"></span>
@@ -23,17 +22,15 @@
         [id]="'dropdownTarget_'+i" [ngClass]="{'show':currentParentTab==item.url}">
         <li *ngFor="let subItem of item.subMenus;let j = index" class="nav-item">
           <a class="nav-link d-flex" [ngClass]="{'active':currentParentTab == item.url && currentTab == subItem.url}"
-            routerLink="/{{item.url}}/{{subItem.url}}" (click)="currentActiveTab(subItem.url,item.url)">
+            routerLink="/{{item.url}}/{{subItem.url}}" (click)="currentActiveTab(subItem.url,item.url, '')">
             <div class="w-40"></div>
             <span [innerHTML]="subItem.name"></span>
           </a></li>
       </ul>
 
     </li>
-    <li id="sidebarOpen" class="nav-item dropdown quicklinks">
-      <a class="nav-link dropdown-toggle d-flex align-items-center" data-toggle="collapse"
-        [attr.data-target]="'#quickLinks'"
-        [ngClass]="{'active':currentTab == 'quickLinks' || currentParentTab == 'quickLinks'}" (click)="currentActiveTab('quickLinks','')">
+    <li class="nav-item dropdown quicklinks" (click)="toggleSideBar = true">
+      <a class="nav-link dropdown-toggle d-flex align-items-center" [ngClass]="{'active':currentTab == 'quickLinks' || currentParentTab == 'quickLinks'}" (click)="currentActiveTab('quickLinks','', 'quickLinks')">
 
         <div class="w-40"><i class="fa fa-external-link fa-2x"></i></div>
         <span>Quick Links</span>
@@ -42,7 +39,7 @@
         class="navbar-nav dropdown-list list-unstyled navbar-collapse collapse">
         <li *ngFor="let item of quickLinks;let i = index; let last = last;let first = first" class="nav-item dropdown">
           <a class="nav-link d-flex" [ngClass]="{'active':currentParentTab == 'quickLinks' && currentTab == item.url}"
-            [href]="item.url" (click)="currentActiveTab(item.url,'quickLinks')">
+            [href]="item.url" (click)="currentActiveTab(item.url,'quickLinks', '')">
             <div class="w-40"></div>
             <span [innerHTML]="item.name"></span>
           </a>
@@ -50,7 +47,7 @@
             <span (click)="toggleAddQuickLink(true, i+1)"><i class="fa fa-plus"></i></span>
           </div>
           <div class="more-icon">
-            <span (click)="showMoreMneu = true" class="more-menu-toggle" [attr.data-target]="'#moreMenu_'+i"><i class="fa fa-ellipsis-v"></i></span>
+            <span class="more-menu-toggle" (click)="moreMenuToggleClicked('moreMenu_'+i)"><i class="fa fa-ellipsis-v"></i></span>
           <div class="more-menu-dropdown" [id]="'moreMenu_'+i">
             <div class="d-block" *ngIf="!first" (click)="reOrderQuickLinks($event, i, 'up')">Move Up</div>
             <div class="d-block" *ngIf="!last"  (click)="reOrderQuickLinks($event, i, 'down')">Move Down</div>
@@ -63,7 +60,7 @@
       <div class="dropdown-custom text-dark border" [ngClass]="{'show': showAddQuickLinkFlag}">
         <h3 class="mb-3">Add Link</h3>
         <form [formGroup]="addQuickLinksForm" (ngSubmit)="createQuickLink(null)">
-          <div class="form-group input-group">
+          <div class="form-group input-group d-none">
             <input type="text" class="form-control" placeholder="Current Index" formControlName="currentIndex">
           </div>
 

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 declare var $: any;
 
@@ -50,54 +50,52 @@ export class SidebarComponent implements OnInit {
       currentIndex: new FormControl(''),
     })
 
-    $('html, body').on('click', '.more-menu-toggle', function (e) {
-      e.stopPropagation();
-      let target = $(this).attr("data-target");
-      $(".more-menu-dropdown").slideUp(0);
-      $(target).slideToggle(0);
-      self.showAddQuickLinkFlag = false;
-    });
-
-
-    $('html, body').on('click', '.dropdown-toggle', function (e) {
-      let target = $(this).attr("data-target");
-      $(target).slideToggle("fast");
-      self.showAddQuickLinkFlag = false;
-    });
-    $('html, body').on('click', '#sidebar', function (e) {
-      e.stopPropagation();
-      $(".more-menu-dropdown").slideUp(0);
-    });
-
-    $('html, body').on('click', function (e) {
-      $('#sidebar').removeClass('mr-0');
-      $(".dropdown-list, .more-menu-dropdown").slideUp("fast");
-      self.showAddQuickLinkFlag = false;
-    });
-
-    $('html, body').on("click", '#sidebarClose', function (e) {
-      e.stopPropagation();
-      $('#sidebar').removeClass('mr-0');
-    });
-
-    $('html, body').on("click", '#sidebarOpen', function (e) {
-      // e.stopPropagation();
-      $('#sidebar').addClass('mr-0');
-    });
-
   }
 
-  currentActiveTab(tab, parentTab) {
-    console.log(tab);
-    console.log(parentTab);
+  moreMenuToggleClicked(target){
+    console.log("more-menu-toggle");
+    event.stopPropagation();
+    $(".more-menu-dropdown").slideUp(0);
+    $("#"+target).slideToggle(0);
+    this.showAddQuickLinkFlag = false;
+  }
+
+  dropdownToggleClicked(target){
+    console.log("dropdownToggleClicked");
+    $("#"+target).slideToggle("fast");
+    this.showAddQuickLinkFlag = false;
+  }
+
+  sidebarClicked(event){
+    console.log("sidebarClicked");    
+    event.stopPropagation();
+    $(".more-menu-dropdown").slideUp(0);
+  }
+
+  @HostListener('document:click', ['$event'])
+  clickout(event) {
+    console.log("document:clicked");  
+    this.toggleSideBar = false;
+    $(".dropdown-list, .more-menu-dropdown").slideUp("fast");
+    this.showAddQuickLinkFlag = false;
+  }
+  
+
+  currentActiveTab(tab, parentTab, target) {
+    // console.log(tab);
+    // console.log(parentTab);
+    $("#"+target).slideToggle("fast");
+    this.showAddQuickLinkFlag = false;
+
     this.currentTab = tab;
     this.currentParentTab = parentTab;
     if (this.quickLinks)
       this.showAddQuickLinkFlag = false;
+      
   }
 
   toggleAddQuickLink(flag, index) {
-    this.showAddQuickLinkFlag = flag;
+    this.showAddQuickLinkFlag = flag == 'toggle' ? !this.showAddQuickLinkFlag : flag;
     if (index != '') {
       this.addQuickLinksForm.controls.currentIndex.setValue(index)
     }
