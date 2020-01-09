@@ -2,17 +2,21 @@
 .w-40{
   width: 40px;
 }
-
-.w-40{
-  width: 40px;
+.w-15{
+  width: 15px;
+}
+.w-30{
+  width: 30px;
 }
 
 .fa-2x {
-  font-size: 1.5em;
+  font-size: 1.3em;
 }
-
+.small{
+  font-size: 90%;
+}
 .sidebar {
-    width: 250px;
+    width: 300px;
     position: fixed;
     top: 0px;
     right: 0;
@@ -21,7 +25,7 @@
     color: #fff;
     transition: all 0.3s;
     // overflow-y: auto;
-    margin-right: -200px;
+    margin-right: -255px;
   }
   
   .sidebar .navbar-toggler {
@@ -35,6 +39,7 @@
   .navbar-dark .navbar-nav .nav-item .nav-link {
     padding: 8px 15px;
     color: #fff;
+    cursor: pointer;
   }
   
   .navbar-dark .navbar-nav .nav-item .nav-link:hover,
@@ -64,7 +69,6 @@
   
   
   .navbar-dark .navbar-nav .nav-item .dropdown-list .nav-link {
-    font-size: 90%;
     padding: 5px 15px;
     // padding-left: 30px;
   }
@@ -78,6 +82,12 @@
     padding-top: 5px;
     font-size: 14px;
   }
+  // .quicklinks .nav-link .fa{
+  //   transition: all 0.3s;
+  // }
+  // .quicklinks .nav-link .fa.arrow-down{
+  //   transform: rotate(90deg);
+  // }
 
   .dropdown-custom{
     width: 350px;
@@ -137,10 +147,12 @@
     right: 30px;
     top: 5px;
     background: #fff;
-    padding: 10px 0px;
+    padding: 5px 0px;
     color: #000;
     border-radius: 4px;
     display: none;
+    font-size: 90%;
+    min-width: 115px;
   }
 
   .more-menu-dropdown > div{
