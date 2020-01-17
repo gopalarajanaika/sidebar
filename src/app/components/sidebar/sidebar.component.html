@@ -87,15 +87,15 @@
             <select type="text" class="form-control" formControlName="group" required>
               <option value="">Select a Group</option>
               <option *ngFor="let item of quickLinks; let i = index" [value]="i" [innerHTML]="item.group"></option>
-              <option value="new">Create a new Group</option>
+              <option value="-1">Create a new Group</option>
             </select>
             <div class="invalid-feedback d-block"
               *ngIf="addQuickLinksForm.get('group').touched && addQuickLinksForm.get('group').invalid">
               Group is required
             </div>
           </div>
-          <label class="small mb-0" *ngIf="addQuickLinksForm.get('group').value == 'new'">New Group</label>
-          <div class="form-group input-group" *ngIf="addQuickLinksForm.get('group').value == 'new'">
+          <label class="small mb-0" *ngIf="addQuickLinksForm.get('group').value == -1">New Group</label>
+          <div class="form-group input-group" *ngIf="addQuickLinksForm.get('group').value == -1">
             <input type="text" class="form-control" placeholder="Group Name" formControlName="newGroup" required>
             <div class="invalid-feedback d-block"
               *ngIf="addQuickLinksForm.get('newGroup').touched && addQuickLinksForm.get('newGroup').invalid">
