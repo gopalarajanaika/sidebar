@@ -60,7 +60,7 @@
                 </span>
               </a>
               <div class="show-add-ql-plus-icon" *ngIf=!last>
-                <span (click)="toggleAddQuickLink(true, j+1)"><i class="fa fa-plus"></i></span>
+                <span (click)="toggleAddQuickLink(true, i, j)"><i class="fa fa-plus"></i></span>
               </div>
               <div class="more-icon">
                 <span class="more-menu-toggle" (click)="moreMenuToggleClicked('moreMenu_'+i+j)"><i
@@ -76,40 +76,17 @@
           </ul>
           
         </li>
-
-
-        <!-- <li *ngFor="let item of quickLinks;let i = index; let last = last;let first = first" class="nav-item dropdown">
-          <a class="nav-link d-flex" [ngClass]="{'active':currentParentTab == 'quickLinks' && currentTab == item.url}"
-            [href]="item.url" (click)="currentActiveTab(item.url,'quickLinks', '')">
-            <div class="w-30"></div>
-            <span [innerHTML]="item.name"></span>
-          </a>
-          <div class="show-add-ql-plus-icon" *ngIf=!last>
-            <span (click)="toggleAddQuickLink(true, i+1)"><i class="fa fa-plus"></i></span>
-          </div>
-          <div class="more-icon">
-            <span class="more-menu-toggle" (click)="moreMenuToggleClicked('moreMenu_'+i)"><i
-                class="fa fa-ellipsis-v"></i></span>
-            <div class="more-menu-dropdown" [id]="'moreMenu_'+i">
-              <div class="d-block" *ngIf="!first" (click)="reOrderQuickLinks($event, i, 'up')">Move Up</div>
-              <div class="d-block" *ngIf="!last" (click)="reOrderQuickLinks($event, i, 'down')">Move Down</div>
-              <div class="d-block" (click)="removeQuickLink($event, i)">Remove</div>
-            </div>
-          </div>
-        </li> -->
-
-
-
       </ul>
-      <button class="btn btn-light" (click)="toggleAddQuickLink(true, '')"><i class="fa fa-plus"></i></button>
+      <button class="btn btn-light" (click)="toggleAddQuickLink(true, '', '')"><i class="fa fa-plus"></i></button>
       <div class="dropdown-custom text-dark border" [ngClass]="{'show': showAddQuickLinkFlag}">
         <h3 class="mb-3">Add Link</h3>
         <form [formGroup]="addQuickLinksForm" (ngSubmit)="createQuickLink(null)">
 
+            <label class="small mb-0">Group</label>
           <div class="form-group input-group">
             <select type="text" class="form-control" formControlName="group" required>
               <option value="">Select a Group</option>
-              <!-- <option *ngFor="let item of quickLinks.groups" [innerHTML]="item"></option> -->
+              <option *ngFor="let item of quickLinks; let i = index" [value]="i" [innerHTML]="item.group"></option>
               <option value="new">Create a new Group</option>
             </select>
             <div class="invalid-feedback d-block"
@@ -117,7 +94,7 @@
               Group is required
             </div>
           </div>
-
+          <label class="small mb-0" *ngIf="addQuickLinksForm.get('group').value == 'new'">New Group</label>
           <div class="form-group input-group" *ngIf="addQuickLinksForm.get('group').value == 'new'">
             <input type="text" class="form-control" placeholder="Group Name" formControlName="newGroup" required>
             <div class="invalid-feedback d-block"
@@ -127,9 +104,9 @@
           </div>
 
           <div class="form-group input-group d-none">
-            <input type="text" class="form-control" placeholder="Current Index" formControlName="currentIndex">
+            <input type="text" class="form-control" placeholder="Current Index" formControlName="childIndex">
           </div>
-
+          <label class="small mb-0">Display Name</label>
           <div class="form-group input-group">
             <input type="text" class="form-control" placeholder="Display Name" formControlName="name" required>
             <div class="invalid-feedback d-block"
@@ -137,6 +114,7 @@
               Display Name is required
             </div>
           </div>
+          <label class="small mb-0">URL</label>
           <div class="form-group input-group">
             <textarea class="form-control" placeholder="URL" formControlName="url"
               pattern="^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$"
@@ -149,7 +127,7 @@
             </div>
           </div>
           <div class="form-group input-group">
-            <input type="reset" (click)="toggleAddQuickLink(false, '')" class="btn btn-light mr-2" value="Cancel">
+            <input type="reset" (click)="toggleAddQuickLink(false, '', '')" class="btn btn-light mr-2" value="Cancel">
             <input type="submit" class="btn btn-primary">
           </div>
         </form>

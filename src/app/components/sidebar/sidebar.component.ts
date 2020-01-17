@@ -66,26 +66,13 @@ export class SidebarComponent implements OnInit {
     }
   ]
 
-  // quickLinks: any = {
-  //   groups: [
-  //     "Science",
-  //     "Sports",
-  //     "Politics"
-  //   ],
-  //   links: [
-  //     { 'id': 0, 'name': 'Infosys', 'url': 'https://infosys.com', 'icon': 'fa-user', 'order': 0 },
-  //     { 'id': 1, 'name': 'Apple', 'url': 'https://apple.com', 'icon': 'fa-user', 'order': 1 },
-  //     { 'id': 2, 'name': 'Webelicious', 'url': 'https://webelicious.in', 'icon': 'fa-user', 'order': 2 },
-  //   ]
-  // }
-
   ngOnInit() {
     this.addQuickLinksForm = new FormGroup({
       group: new FormControl(''),
       newGroup: new FormControl(''),
       name: new FormControl(''),
       url: new FormControl(''),
-      currentIndex: new FormControl(''),
+      childIndex: new FormControl(''),
     })
   }
 
@@ -119,8 +106,6 @@ export class SidebarComponent implements OnInit {
 
 
   currentActiveTab(tab, parentTab, target) {
-    // console.log(tab);
-    // console.log(parentTab);
     if (target && target != '')
       $("#" + target).slideToggle("fast");
 
@@ -132,24 +117,37 @@ export class SidebarComponent implements OnInit {
 
   }
 
-  toggleAddQuickLink(flag, index) {
+  toggleAddQuickLink(flag, parentIndex, childIndex) {
     this.showAddQuickLinkFlag = flag == 'toggle' ? !this.showAddQuickLinkFlag : flag;
-    if (index != '') {
-      this.addQuickLinksForm.controls.currentIndex.setValue(index)
-    }
+    this.addQuickLinksForm.controls.childIndex.setValue(childIndex);
+    this.addQuickLinksForm.controls.group.setValue(parentIndex);
   }
 
   createQuickLink() {
-    // console.log(this.addQuickLinksForm.value);
     this.addQuickLinksForm.markAllAsTouched();
     if (this.addQuickLinksForm.valid) {
-      let currentIndex = this.addQuickLinksForm.get('currentIndex').value;
-      console.log(this.addQuickLinksForm.get('currentIndex').value);
-      if (currentIndex && currentIndex != '')
-        this.quickLinks.splice(currentIndex, 0, this.addQuickLinksForm.value);
-      else
-        this.quickLinks.push(this.addQuickLinksForm.value);
-      this.addQuickLinksForm.reset();
+      let name = this.addQuickLinksForm.get('name').value;
+      let newGroup = this.addQuickLinksForm.get('newGroup').value;
+      let url = this.addQuickLinksForm.get('url').value;
+      let childIndex = this.addQuickLinksForm.get('childIndex').value;
+      let group = this.addQuickLinksForm.get('group').value;
+      if (group != -1) {
+        if (childIndex == 0 || childIndex != '')
+          this.quickLinks[group].links.splice(childIndex+1, 0, this.addQuickLinksForm.value);
+        else
+          this.quickLinks[group].links.push(this.addQuickLinksForm.value);
+      } else {
+        let obj = {
+          "id": 4,
+          "group": newGroup,
+          "links": [
+            { 'id': 4, 'name': name, 'url': url, 'icon': 'fa-user', 'order': 0 }
+          ]
+        }
+        this.quickLinks.push(obj);
+      }
+
+      this.addQuickLinksForm.reset({ 'group': '', 'newGroup':'', 'name':'', 'url':'', 'childIndex':''});
     }
   }
 
@@ -174,7 +172,4 @@ export class SidebarComponent implements OnInit {
     if (confrm)
       this.quickLinks.splice(index, 1)
   }
-
-
-
 }

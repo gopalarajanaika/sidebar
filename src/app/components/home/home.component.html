@@ -1,0 +1,6 @@
+<owl-carousel #owlElement class="banner" *ngIf="items.length > 0" [options]="sliderOptions"
+    [carouselClasses]="['owl-theme', 'sliding']">
+    <div class="w-100 px-2" *ngFor="let item of items;let i = index">
+        <img class="mr-3 img-fluid m-auto" [src]="'assets/images/slider/'+item">
+    </div>
+</owl-carousel>
