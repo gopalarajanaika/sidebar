@@ -1,6 +1,21 @@
-<owl-carousel #owlElement class="banner" *ngIf="items.length > 0" [options]="sliderOptions"
+<!-- <owl-carousel #owlElement class="banner" *ngIf="items.length > 0" [options]="sliderOptions"
     [carouselClasses]="['owl-theme', 'sliding']">
     <div class="w-100 px-2" *ngFor="let item of items;let i = index">
         <img class="mr-3 img-fluid m-auto" [src]="'assets/images/slider/'+item">
     </div>
-</owl-carousel>
+</owl-carousel> -->
+
+
+<ngx-slick-carousel class="carousel" 
+                        #slickModal="slick-carousel" 
+                        [config]="slideConfig" 
+                        (init)="slickInit($event)"
+                        (breakpoint)="breakpoint($event)"
+                        (afterChange)="afterChange($event)"
+                        (beforeChange)="beforeChange($event)">
+        <div ngxSlickItem *ngFor="let item of items" class="slide">
+              <img [src]="'assets/images/slider/'+item" [alt]="item" class="w-100">
+        </div>
+    </ngx-slick-carousel>
+
+    <div class="mb-5"></div>
